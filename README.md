@@ -22,4 +22,3 @@ The scripts retrieves 15000 followers and enriched information about them (numbe
 Results are then saved in a newly created 'data' directory as JSON files (one for each of the accounts provided in the call). 
 
 
-#TODO: script to obtain followers of the retrieved followers (based on a threshold to  identify bigger accounts) 
