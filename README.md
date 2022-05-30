@@ -17,6 +17,12 @@ python retrievefollowers0.py -l "2244994945,1334200897081987072" -t 100000
 
 `-t --treshold` optional parameter: changes the treshold to define an account as big (default 75000)
 
+When there's interest about just one accont the commas can be omitted: 
+
+````
+python retrievefollowers0.py -l 2244994945
+````
+
 The scripts retrieves 15000 followers and enriched information about them (number of posts, number of followers, location if available, username...) each 15minutes for small accounts (default <=75K followers) and 75000 ids each 15 minutes for the the followers for big accounts (default >75K followers)
 
 Results are then saved in a newly created 'data' directory as JSON files (one for each of the accounts provided in the call). 
