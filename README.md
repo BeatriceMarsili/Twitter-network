@@ -7,7 +7,7 @@ Python code based on the example provided by [TwitterDev](https://github.com/twi
 - List of the IDs of the accounts whose followers we want to get. You can use this [tool](https://tweeterid.com/) to retrive the IDs of one account starting from its username. 
 
 ## Usage 
-To obtain the followers of the account provided in the list (example):
+To obtain the followers of the account provided in the list (examples):
 ````
 pip install requests
 python retrievefollowers0.py -l "2244994945,1334200897081987072"  
