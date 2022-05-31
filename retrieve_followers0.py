@@ -97,7 +97,11 @@ def retrieve_big(user_id, count, followers):
     while count*5000<followers:  
         if count%15==0 and count!=0:
             retrieved = count*5000
-            missing = followers - retrieved 
+            missing = followers - retrieved
+            with open("data/response{}.json".format(user_id), "a") as f:
+                f.write(json.dumps(response_lst))
+                next_token = None
+                response_lst=[] 
             print(str(datetime.datetime.now()),'Sleeping, I retrieved the ids for {} accounts. \nI still need to retrieve the ids for {} accounts'.format(retrieved, missing))
             time.sleep(905)             #sleeps for 15 mins and 5 seconds to respect the Twitter limitation of 15 requests x 15 minutes https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-followers
         url = create_url(user_id, next_token, 'big')
@@ -106,10 +110,6 @@ def retrieve_big(user_id, count, followers):
         response_lst.append(json_response['ids'])
         if 'next_cursor_str' in json_response:
             next_token = json_response['next_cursor_str']
-        if next_token=='0':
-            with open("data/response{}.json".format(user_id), "w") as f:
-                f.write(json.dumps(response_lst))
-                next_token = None
     print("Ids of the followers of user {} saved at \"data/response{}.json\"".format(user_id, user_id))
     return count
 
