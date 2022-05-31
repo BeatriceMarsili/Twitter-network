@@ -124,8 +124,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='Twitter-followers',
     description='''This scripts retrieves information about the Twitter followers of the account(s) provided as id in the args.
                         \nThe IDs must be provided (-l --list) as a string with comma-separated values i.e. "2244994945, 1334200897081987072".
-                        \nBy deafault, if the account(s) provided have less than 75K of followers, several information about the followers will be retrieved, 
-                        as number of posted tweets, username, location (if available) and number of followers but this process is quite long, it will retrieve 15K followers each 15minutes.
+                        \nBy deafault, if the account(s) provided have less than 75K of followers, several information about the followers ( as number of posted tweets, username, location (if available) and number of followers) will be retrieved, 
+                        but this process is quite long, it will retrieve information about 15K followers and then stop for 15minutes.
                         \nFor accounts that have more than 75K followers just the ids of the followers account will be retrieved, this process obtains 75K of IDs each 15minutes. 
                         \nThis treshold of 75K can be changed with the optional parameter -t --treshold
                         ''')
@@ -138,7 +138,7 @@ if __name__ == '__main__':
     ids = [int(item)for item in args.list.split(',')]
     treshold = args.treshold    
     if treshold==None:
-        treshold=30000
+        treshold=75000
     count_small = None
     count_big =None
     for user_id in ids:
