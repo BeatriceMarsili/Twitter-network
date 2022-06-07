@@ -142,12 +142,9 @@ if __name__ == '__main__':
     ids = [int(item)for item in args.list.split(',')]
     treshold = args.treshold 
     token = args.cursor
-    data_dir ='\data'
-    log_dir = '\data\logs'
-    if not os.path.exists(os.getcwd()+data_dir):
-        os.makedirs(os.getcwd()+data_dir)
-    if not os.path.exists(os.getcwd()+log_dir):
-        os.makedirs(os.getcwd()+log_dir)
+    res_dir = '\data\logs'
+    if not os.path.exists(os.getcwd()+res_dir):
+        os.makedirs(os.getcwd()+res_dir)
     if treshold==None:
         treshold=75000
     count_small = None
