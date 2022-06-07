@@ -18,6 +18,7 @@ python retrievefollowers0.py -l "2244994945,1334200897081987072" -t 100000
 `-t --treshold` optional parameter: changes the treshold to define an account as big (default 75000)
 
 `-c --cursor` optional parameter: to start the search from a certain token (given by Twitter in the previous request and saved to the log file)
+
 When there's interest about just one accont the commas can be omitted: 
 
 ````
