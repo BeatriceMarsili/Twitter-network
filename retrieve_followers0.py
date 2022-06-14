@@ -97,16 +97,16 @@ def retrieve_big(next_token, user_id, count, followers):
     logger = logging.getLogger()
     handler = logging.FileHandler("data/logs/logfile{}.log".format(datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.%f")))
     logger.addHandler(handler)
-    while count*5000<followers:  
+    while next_token!=0:  
         if count%15==0 and count!=0:
             retrieved = count*5000
             missing = followers - retrieved
             with open("data/response{}.json".format(user_id), "a") as f:
                 f.write(json.dumps(response_lst))
                 response_lst=[]
-            message= str(datetime.datetime.now()),'Sleeping, I retrieved the ids for {} accounts. I still need to retrieve the ids for {} accounts. Next cursor: {}. User_id being handled:{}'.format(retrieved, missing, next_token, user_id)     
+            message= print_time()+'Sleeping, I retrieved the ids for {} accounts. I still need to retrieve the ids for {} accounts. Next cursor: {}. User_id being handled:{}'.format(retrieved, missing, next_token, user_id)     
             logger.error(message)
-            print(str(datetime.datetime.now()),'Sleeping, I retrieved the ids for {} accounts. \nI still need to retrieve the ids for {} accounts. Next cursor: {}'.format(retrieved, missing, next_token))
+            print(print_time(),'Sleeping, I retrieved the ids for {} accounts. \nI still need to retrieve the ids for {} accounts. Next cursor: {}'.format(retrieved, missing, next_token))
             time.sleep(905)             #sleeps for 15 mins and 5 seconds to respect the Twitter limitation of 15 requests x 15 minutes https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-followers
         url = create_url(user_id, next_token, 'big')
         json_response = connect_to_endpoint(url)
