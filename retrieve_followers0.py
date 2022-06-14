@@ -97,7 +97,7 @@ def retrieve_big(next_token, user_id, count, followers):
     logger = logging.getLogger()
     handler = logging.FileHandler("data/logs/logfile{}.log".format(datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.%f")))
     logger.addHandler(handler)
-    while next_token!=0:  
+    while int(next_token)!=0:  
         if count%15==0 and count!=0:
             retrieved = count*5000
             missing = followers - retrieved
