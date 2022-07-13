@@ -22,14 +22,14 @@ def bearer_oauth(r):
     bearer_token = os.environ.get('BEARER_TOKEN')
 
     r.headers["Authorization"] = f"Bearer {bearer_token}"
-    r.headers["User-Agent"] = "UnMappers Analysis"
+    r.headers["User-Agent"] = "Twitter Analysis"
     return r
 
 def connect_to_endpoint(url):
     params = get_params()
     response = requests.request("GET", url, auth=bearer_oauth, params=params)
     if response.status_code != 200:
-        print('sleeping for error on twitter', response.status_code)
+        print('sleeping for error on twitter', response.status_code, response.text)
         time.sleep(905)
         response = requests.request("GET", url, auth=bearer_oauth, params=params)
     return response.json()
@@ -37,11 +37,7 @@ def connect_to_endpoint(url):
 def format_ids(ids_lst):
     return ','.join(ids_lst)
 
-def n_followers():
-    res_dir='\\try_res'
-    if not os.path.exists(os.getcwd()+res_dir):
-        os.makedirs(os.getcwd()+res_dir)
-
+        
 if __name__ == '__main__':
     path = os.getcwd()
     if not os.path.exists('Twitter_Analysis/data/n_followers/logs'):
@@ -49,12 +45,16 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     handler = logging.FileHandler("Twitter_Analysis/data/n_followers/logs/{}.json".format(datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.%f")))
     logger.addHandler(handler)    
-    counter = 2100
-    idx=209900
-    tot = 15560858
+    counter = 0
+    idx=0
+    with open('Twitter_Analysis/data/database_ids/ids.json', "rb") as f:
+        ids_lst =  pickle.load(f)
+        tot = len(ids_lst)
+        del ids_lst
     if not os.path.exists('Twitter_Analysis/data/n_followers'):
         os.makedirs('Twitter_Analysis/data/n_followers')
     while counter <=tot:
+        #provide here the file containing the list of ids
         with open('Twitter_Analysis/data/database_ids/ids.json', "rb") as f:
             ids_lst =  pickle.load(f)
             to_search= ids_lst[idx:idx+100]
