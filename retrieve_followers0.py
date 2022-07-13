@@ -13,6 +13,8 @@ import argparse
 import datetime
 import logging
 
+def print_time():
+    return str(datetime.datetime.now())
 
 def create_url(user_id, token, type=None):
     '''
@@ -21,9 +23,9 @@ def create_url(user_id, token, type=None):
     '''
     if type==None:
         if token:
-            return "https://api.twitter.com/2/users/{}/followers?&user.fields=location,public_metrics&max_results=1000&pagination_token={}".format(user_id, token)
+            return "https://api.twitter.com/2/users/{}/followers?&max_results=1000&pagination_token={}&user.fields=created_at,description,location,public_metrics".format(user_id, token)
         else:
-            return "https://api.twitter.com/2/users/{}/followers?&user.fields=location,public_metrics&max_results=1000".format(user_id)
+            return "https://api.twitter.com/2/users/{}/followers?&max_results=1000&user.fields=created_at,description,location,public_metrics".format(user_id)
     if type=='lookup':
         return 'https://api.twitter.com/1.1/users/lookup.json?user_id={}&max_result=1'.format(user_id)
     if type=='big':
@@ -32,8 +34,6 @@ def create_url(user_id, token, type=None):
         else:
             return 'https://api.twitter.com/1.1/followers/ids.json?user_id={}&count=5000'.format(user_id)
     
-def get_params():
-    return {"user.fields": ["created_at", "location"]}
 
 def bearer_oauth(r):
     """
@@ -49,11 +49,9 @@ def bearer_oauth(r):
 def connect_to_endpoint(url):
     response = requests.request("GET", url, auth=bearer_oauth)
     if response.status_code != 200:
-        raise Exception(
-            "Request returned an error: {} {}".format(
-                response.status_code, response.text
-            )
-        )
+        print('sleeping for error on twitter', response.status_code, response.text)
+        time.sleep(905)
+        response = requests.request("GET", url, auth=bearer_oauth)
     return response.json()
 
 
@@ -67,9 +65,9 @@ def retrieve_small(user_id, count, followers):
     response_lst= []
     while count*1000<followers:
         if count%15==0 and count!=0:
-            retrieved = len(response_lst)
+            retrieved = count*1000
             missing = followers - retrieved 
-            print(str(datetime.datetime.now()),'Sleeping, I retrieved information about {} accounts. I still need to retrieve information about {} accounts'.format(retrieved, missing))
+            print(print_time(),'Sleeping, I retrieved information about {} accounts. I still need to retrieve information about {} accounts'.format(retrieved, missing))
             time.sleep(905)             #sleeps for 15 mins and 5 seconds to respect the Tweeter limitation of 15 requests x 15 minutes https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/get-users-id-followers
         url = create_url(user_id, next_token)
         json_response = connect_to_endpoint(url)
@@ -97,13 +95,15 @@ def retrieve_big(next_token, user_id, count, followers):
     logger = logging.getLogger()
     handler = logging.FileHandler("data/logs/logfile{}.log".format(datetime.datetime.now().strftime("%Y-%m-%d_%H.%M.%S.%f")))
     logger.addHandler(handler)
-    while int(next_token)!=0:  
+    while next_token!=0:  
         if count%15==0 and count!=0:
             retrieved = count*5000
             missing = followers - retrieved
-            with open("data/response{}.json".format(user_id), "a") as f:
+            with open("data/response{}.json".format(user_id), "a") as f: #todo separate files x req
                 f.write(json.dumps(response_lst))
+                del response_lst
                 response_lst=[]
+                f.close()
             message= print_time()+'Sleeping, I retrieved the ids for {} accounts. I still need to retrieve the ids for {} accounts. Next cursor: {}. User_id being handled:{}'.format(retrieved, missing, next_token, user_id)     
             logger.error(message)
             print(print_time(),'Sleeping, I retrieved the ids for {} accounts. \nI still need to retrieve the ids for {} accounts. Next cursor: {}'.format(retrieved, missing, next_token))
@@ -114,6 +114,7 @@ def retrieve_big(next_token, user_id, count, followers):
         response_lst.append(json_response['ids'])
         if 'next_cursor_str' in json_response:
             next_token = json_response['next_cursor_str']
+            #todo merge files
     print("Ids of the followers of user {} saved at \"data/response{}.json\"".format(user_id, user_id))
     return count
 
@@ -141,7 +142,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     ids = [int(item)for item in args.list.split(',')]
     treshold = args.treshold 
-    token = args.cursor
+    token = args.cursor  #todo add 0 first req
     res_dir = '\data\logs'
     if not os.path.exists(os.getcwd()+res_dir):
         os.makedirs(os.getcwd()+res_dir)
@@ -157,4 +158,6 @@ if __name__ == '__main__':
         else: 
             print('I will retrieve the IDs of the followers of account {}'.format(user_id))
             count_big = retrieve_big(token, user_id, count_big, followers)
+
+
 
