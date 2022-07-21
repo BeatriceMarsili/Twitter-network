@@ -142,7 +142,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     ids = [int(item)for item in args.list.split(',')]
     treshold = args.treshold 
-    token = args.cursor  #todo add 0 first req
+    token = args.cursor 
     res_dir = '\data\logs'
     if not os.path.exists(os.getcwd()+res_dir):
         os.makedirs(os.getcwd()+res_dir)
