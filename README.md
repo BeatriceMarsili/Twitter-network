@@ -36,3 +36,7 @@ Results are then saved in a newly created 'data' directory as JSON files (one fo
 Once retrieved the followers of the target account the script retrieve_following can be used to search for other accounts, other than the target ones, that the retrieved account follows. 
 
 The script needs a json file target_requests.json located in the folder 'data/database_ids/' containing the requests formatted as https://api.twitter.com/2/users/{user_id}/following?user.fields={desired user fileds}'. The script will retrieve information about 1000 accounts followed by each of the accounts in input. Performs 15 requests each 15 minutes then sleeps not to exceed Twitter limits. 
+
+````
+python retrieve_following.py
+````
