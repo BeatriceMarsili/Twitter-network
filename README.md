@@ -1,5 +1,5 @@
-# Twitter followers
-Python code based on the example provided by [TwitterDev](https://github.com/twitterdev/Twitter-API-v2-sample-code/blob/main/Follows-Lookup/followers_lookup.py) to retrieve followers of a Twitter account based on its ID.
+# Twitter network
+Python code based on the example provided by [TwitterDev](https://github.com/twitterdev/Twitter-API-v2-sample-code/blob/main/Follows-Lookup/followers_lookup.py) to retrieve followers and following of a Twitter account based on its ID.
 
 ## Requirements 
 - Twitter project's BEARER_TOKEN set as environmental variable. 
