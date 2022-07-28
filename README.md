@@ -1,5 +1,7 @@
 # Twitter network
-Python code based on the example provided by [TwitterDev](https://github.com/twitterdev/Twitter-API-v2-sample-code/blob/main/Follows-Lookup/followers_lookup.py) to retrieve followers and following of a Twitter account based on its ID.
+Python code based on the example provided by [TwitterDev](https://github.com/twitterdev/Twitter-API-v2-sample-code/blob/main/Follows-Lookup/followers_lookup.py) to retrieve a Twitter network. 
+
+The idea is to define some target accounts, retrieve their followers (retreieve_followers0.py) and the other accounts that are followed by the previously retrieved ones. 
 
 ## Requirements 
 - Twitter project's BEARER_TOKEN set as environmental variable. 
@@ -31,3 +33,6 @@ The scripts retrieves 15000 followers and enriched information about them (numbe
 Results are then saved in a newly created 'data' directory as JSON files (one for each of the accounts provided in the call). 
 
 ### Following
+Once retrieved the followers of the target account the script retrieve_following can be used to search for other accounts, other than the target ones, that the retrieved account follows. 
+
+The script needs a json file target_requests.json located in the folder 'data/database_ids/' containing the requests formatted as https://api.twitter.com/2/users/{user_id}/following?user.fields={desired user fileds}'. The script will retrieve information about 1000 accounts followed by each of the accounts in input. Performs 15 requests each 15 minutes then sleeps not to exceed Twitter limits. 
